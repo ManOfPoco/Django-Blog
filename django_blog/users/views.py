@@ -7,11 +7,11 @@ from django.views.generic import CreateView, TemplateView
 
 from .forms import (
     MyUserCreationForm,
+    ProfileUpdateForm, UserUpdateForm
 )
 
 from .models import Profile
 from blog.models import Post
-
 
 
 class SignUpView(CreateView):
@@ -41,3 +41,32 @@ class ProfileView(TemplateView):
         context["post"] = post
 
         return context
+
+
+def profile_settings(request):
+
+    if request.method == 'POST':
+        profile_form = ProfileUpdateForm(
+            request.POST,
+            request.FILES,
+            instance=request.user.profile)
+        user_form = UserUpdateForm(
+            request.POST,
+            instance=request.user)
+
+        if profile_form.is_valid() and user_form.is_valid():
+            profile_form.save()
+            user_form.save()
+
+            return redirect(reverse('users:settings'))
+    else:
+        profile_form = ProfileUpdateForm(
+            instance=request.user.profile)
+        user_form = UserUpdateForm(
+            instance=request.user)
+
+    context = {
+        'profile_form': profile_form,
+        'user_form': user_form
+    }
+    return render(request, 'users/settings.html', context)

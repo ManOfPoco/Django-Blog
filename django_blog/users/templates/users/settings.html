@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Settings{% endblock title %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'users/settings.css' %}">
+
+<form method='POST'>{% csrf_token %}
+        <div class="card-body tab-content">
+            <div class="tab-pane active" id="profile">
+                <h6>YOUR PROFILE INFORMATION</h6>
+                <hr>
+                <form>
+                    <div class="form-group">
+                        <label for="fullName">First Name</label>
+                        {{user_form.first_name}}
+                        <small id="NameHelp" class="form-text text-muted">Your name may appear around here where you are
+                            mentioned. You can change or remove it at any time.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="fullName">Last Name</label>
+                        {{user_form.last_name}}
+                        <small id="LastNameHelp" class="form-text text-muted">Your name may appear around here where you
+                            are mentioned. You can change or remove it at any time.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="bio">About me</label>
+                        {{profile_form.about}}
+                    </div>
+                    {% comment %} <div class="form-group">
+                        <label for="url">Website</label>
+                        <input type="text" class="form-control" id="url" placeholder="Enter your website address"
+                            value="http://benije.ke/pozzivkij">
+                    </div> {% endcomment %}
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        {{profile_form.city}}
+                    </div>
+                    <div class="form-group small text-muted">
+                        All of the fields on this page are optional and can be deleted at any time, and by filling them
+                        out, you're giving us consent to share this data wherever your user profile appears.
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
+</form>
+
+{% endblock content %}

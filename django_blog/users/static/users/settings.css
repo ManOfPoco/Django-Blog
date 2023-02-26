@@ -1,0 +1,43 @@
+.context-body {
+    margin-top: 20px;
+    text-align: left;
+    background-color: #e2e8f0;
+}
+
+.form-group {
+    padding: 10px 5px 10px
+}
+
+.main-body {
+    padding: 15px;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-clip: border-box;
+    border: 0 solid rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1rem;
+    margin: auto;
+    width: 65%;
+}
+
+.gutters-sm {
+    margin-right: -8px;
+    margin-left: -8px;
+}
+
+.gutters-sm>.col,
+.gutters-sm>[class*=col-] {
+    padding-right: 8px;
+    padding-left: 8px;
+}

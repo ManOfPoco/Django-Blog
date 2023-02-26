@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
+from .models import Profile
+
 
 class MyUserCreationForm(UserCreationForm):
 
@@ -59,3 +61,50 @@ class UserAuthenticationForm(AuthenticationForm):
     class Meta:
         model = User
         fields = ['username', 'password']
+
+
+class ProfileUpdateForm(forms.ModelForm):
+
+    city = forms.CharField(widget=forms.TextInput(attrs={
+        'type': 'text',
+        'class': 'form-control',
+        'id': 'location',
+        'placeholder': 'Enter your location',
+    }), required=False)
+
+    about = forms.CharField(widget=forms.Textarea(attrs={
+        'type': 'text',
+        'class': 'form-control autosize',
+        'id': 'bio',
+        'placeholder': 'Write something about you',
+        "style": "overflow: hidden; overflow-wrap: break-word; resize: none; height: 62px;"
+    }), required=False)
+
+    image = forms.ImageField(required=False)
+
+    class Meta:
+        model = Profile
+        fields = ['city', 'about', 'image']
+
+
+class UserUpdateForm(forms.ModelForm):
+
+    first_name = forms.CharField(widget=forms.TextInput(attrs={
+        'type': 'text',
+        'class': 'form-control',
+        'id': 'fullName',
+        'placeholder': 'Enter your first name',
+        'aria-describedby': "NameHelp",
+    }), required=False)
+
+    last_name = forms.CharField(widget=forms.TextInput(attrs={
+        'type': 'text',
+        'class': 'form-control',
+        'id': 'fullName',
+        'placeholder': "Enter your last name",
+        'aria-describedby': "LastNameHelp",
+    }), required=False)
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']

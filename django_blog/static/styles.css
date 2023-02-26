@@ -1,0 +1,9 @@
+a {
+    color: -webkit-link;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+input[type=submit] {
+    display: hidden;
+}

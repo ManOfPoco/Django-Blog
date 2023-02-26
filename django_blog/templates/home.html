@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Blover{% endblock title %}
+
+{% block head %}
+{% endblock head %}
+
+{% block content %}
+
+<div class="container">
+    {% for post in post_list %}
+    <div class="row p-3 border rounded mb-4">
+        <div class="row px-4 py-3">
+            <div class="col-1" style='padding-right:0px; width:70px'>
+                <a href="#">
+                    <img src="{{ post.author.profile.image.url }}" alt="photo" width="50" height="50" class="rounded-circle">
+                </a>
+            </div>
+            <div class="col-md-7 col-9">
+                <a href="#" class='text-muted'>
+                    <h5>{{ post.author.first_name }}{% if post.author.last_name %}{{ post.author.last_name }}{% endif %}</h5>
+                </a>
+                <p class='text-muted'>{{ post.last_updated|date:'F d, o' }}</p>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+{% endblock content %}

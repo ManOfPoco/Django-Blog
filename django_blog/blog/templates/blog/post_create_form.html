@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Post creation{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'blog/post_create_form.css' %}">
+{% endblock head %}
+
+{% block content %}
+
+<div class='body-center'>
+    <form method='POST'>{% csrf_token %}
+        {{form}}
+        <div class="d-grid gap-2 col-3 mx-auto">
+        <button type='submit' class='btn btn-primary btn-lg'>Post</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

@@ -46,7 +46,7 @@
                     {% block write_post %}
                     <div class="nav-link">
                         <li class='nav-item'>
-                            <a class="fs-6 mb-3 text-muted" href="#">
+                            <a class="fs-6 mb-3 text-muted" href="{% url 'blog:new_post' %}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                     class="bi bi-pencil-square" viewBox="0 0 16 16">
                                     <path
@@ -66,13 +66,13 @@
                     </li>
 
                     <div class="dropdown">
-                        <a class="nav-link dropdown-toggle text-muted" href="{% url 'users:profile' request.user.profile.slug %}" role="button" data-bs-toggle="dropdown"
+                        <a class="nav-link dropdown-toggle text-muted" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             <img src="{{request.user.profile.image.url}}" width="30" height="30" alt="profile">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg-end dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
-                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:profile' request.user.profile.slug %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:settings' %}">Settings</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

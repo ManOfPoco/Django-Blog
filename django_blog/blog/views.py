@@ -1,12 +1,19 @@
-from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.shortcuts import (
+    get_list_or_404, get_object_or_404,
+    render
+)
+from django.urls import reverse
 
-from .models import (
-    Post, Category
+from django.views.generic import (
+    ListView, CreateView, DeleteView, UpdateView
 )
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from .models import Post, Category
 from users.models import Profile
 
-from django.views.generic import ListView
+from .forms import CreatePostForm
 
 
 def post_detail(request, slug, pk):
@@ -46,3 +53,19 @@ class UserPostList(ListView):
             author=Profile.objects.get(
                 slug=self.kwargs['slug']).user).order_by('-date_create')
         return queryset
+
+
+class CreatePostView(LoginRequiredMixin, CreateView):
+    form_class = CreatePostForm
+    template_name = 'blog/post_create_form.html'
+
+    def form_valid(self, form: CreatePostForm):
+        form.instance.author = self.request.user
+        form.save()
+        return super().form_valid(form)
+
+
+class UpdatePostView(LoginRequiredMixin, UpdateView):
+    model = Post
+    form_class = CreatePostForm
+    template_name = 'blog/post_form.html'

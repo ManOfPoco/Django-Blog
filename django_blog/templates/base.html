@@ -62,11 +62,11 @@
 
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link text-muted" style="padding-right: 4px" href="#">{{request.user.username}}</a>
+                        <a class="nav-link text-muted" style="padding-right: 4px" href="{% url 'users:profile' request.user.profile.slug %}">{{request.user.username}}</a>
                     </li>
 
                     <div class="dropdown">
-                        <a class="nav-link dropdown-toggle text-muted" href="#" role="button" data-bs-toggle="dropdown"
+                        <a class="nav-link dropdown-toggle text-muted" href="{% url 'users:profile' request.user.profile.slug %}" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             <img src="{{request.user.profile.image.url}}" width="30" height="30" alt="profile">
                         </a>

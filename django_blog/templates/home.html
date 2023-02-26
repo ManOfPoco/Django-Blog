@@ -34,7 +34,7 @@
             </div>
             <div class="col-md-7 col-9">
                 <a href="#" class='text-muted'>
-                    <h5>{{ post.author.first_name }}{% if post.author.last_name %}{{ post.author.last_name }}{% endif %}</h5>
+                    <h5>{{ post.author.username }}</h5>
                 </a>
                 <p class='text-muted'>{{ post.last_updated|date:'F d, o' }}</p>
             </div>

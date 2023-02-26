@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{request.user.username}}{% endblock title %}
+
+{% block content %}
+
+
+<section class="h-100 gradient-custom-2">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-lg-9 col-xl-7">
+                <div class="card">
+                    <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
+                        <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+                            <img src="{{profile.image.url}}" alt="Generic placeholder image"
+                                class="img-fluid img-thumbnail mt-4 mb-2"
+                                style="width: 150px; height: 120px; z-index: 2;">
+                        </div>
+                        <div class="ms-3" style="margin-top: 120px;">
+                            <div style='float: left;'>
+                                <h5>{{ profile.user.username }}</h5>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="p-4 text-black" style="background-color: #f8f9fa;">
+                        {% if request.user.username == profile.user.username %}
+                            <div style='float: left;'>
+                                <a href='#'><button class="btn btn-outline-dark" data-mdb-ripple-color="dark"
+                                style="z-index: 1;">Edit profile</button></a>
+                            </div>
+                            <div class="d-flex justify-content-end text-center py-1">
+                        {% else %}
+                            <div class="d-flex text-center py-1">
+                        {% endif %}
+                                <a href='#' class='text-reset'><div class="px-3">
+                                    <p class="mb-1 h5">0</p>
+                                    <p class="small text-muted mb-0">Followers</p>
+                                </div></a>
+                                <a href='#' class='text-reset'><div class="px-3">
+                                    <p class="mb-1 h5">0</p>
+                                    <p class="small text-muted mb-0">Following</p>
+                                </div></a>
+                            </div>
+                    </div>
+
+                    <div class="card-body p-4 text-black">
+                        <div class="mb-5">
+                            {% if profile.about %}
+                            <p class="lead fw-normal mb-1">About</p>
+                            <div class="p-4" style="background-color: #f8f9fa;">
+                                <p>{{profile.about}}</p>
+                            </div>
+                        {% endif %}
+                        {% if post %}
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <p class="lead fw-normal mb-0">Recent posts</p>
+                            <p class="mb-0"><a href="#" class="text-muted">Show all</a></p>{% endif %}
+                        </div>
+                        {% for post in post %}
+                        <div class="body-center">
+                            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                                <div class="col p-4 d-flex flex-column position-static">
+                                    <a href="{% url 'users:profile' post.author.profile.slug %}" class='text-muted'>
+                                        <div class='app_top'>
+                                            <img src="{{ post.author.profile.image.url }}" alt="photo" width="50" height="50" style="float: left;">
+                                            <p><span style='font-weight: bold; padding: 5px 3% 5px;'>{{ post.author.username }}</span><br><span class='text-muted', style='padding: 5px 3% 5px;'>{{ post.date_create|date:'F d, o' }}</span></p></a>
+                                        </div>
+                                        <a href="{% url 'blog:blog_detail' post.slug post.id %}" class='text-muted'><h3 class='mb-0 fw-bold text-dark'>{{ post.title|truncatewords:50 }}</h3>
+                                        <p class="card-text mb-auto">{{post.body|linebreaks|truncatewords:30}}</p>
+                                        {% if post.body|wordcount > 30 %}
+                                            <span class='text-primary'>Continue reading</span>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+{% endblock content %}

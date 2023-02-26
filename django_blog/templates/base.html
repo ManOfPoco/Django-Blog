@@ -76,15 +76,15 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="#">Log out</a></li>
+                            <li><a class="dropdown-item" href="{% url 'users:logout' %}">Log out</a></li>
                         </ul>
                     </div>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link text-muted" style="padding-right: 4px" href="#">Sign Up</a>
+                            <a class="nav-link text-muted" style="padding-right: 4px" href="{% url 'users:sign-up' %}">Sign Up</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-muted" style="padding-right: 4px" href="#">Sign In</a>
+                            <a class="nav-link text-muted" style="padding-right: 4px" href="{% url 'users:sign-in' %}">Sign In</a>
                         </li>
                     {% endif %}
                 </ul>

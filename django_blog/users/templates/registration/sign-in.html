@@ -1,0 +1,44 @@
+{% extends 'registration/sign-up.html' %}
+{% load static %}
+
+{% block title %}Sign In{% endblock title %}
+
+{% block content %}
+
+<main class="form-signin w-100 m-auto">
+    <form method='POST'>{% csrf_token %} 
+      <a href="{% url 'home' %}">
+        <img class="mb-4" src="{% static 'registration\images\blover.png' %}" alt="" width="72" height="72"></a>
+      <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+  
+      <div class="form-floating">
+        {{form.username}}
+        <label for="floatingInput">Username</label>
+      </div>
+      <div class="form-floating">
+        {{form.password}}
+        <label for="floatingPassword">Password</label>
+      </div>
+  
+      {% comment %} <div class="checkbox mb-3">
+        <label>
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+      </div> {% endcomment %}
+      <button class="w-100 btn btn-lg btn-primary" style='margin-top: 15px;' type="submit">Sign in</button>
+      <input type="hidden" name="next" value="{{ next }}" />
+    </form>
+    {% block label %}
+    <div style='padding: 15px'>
+        Don’t have an account?
+    <a href="{% url 'users:sign-up' %}">
+        Sign Up
+    </a>
+</div>
+    {% endblock label %}
+    </main>
+
+
+</div>
+
+{% endblock content %}

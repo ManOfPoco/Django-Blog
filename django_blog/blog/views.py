@@ -4,6 +4,8 @@ from .models import (
     Post, Category
 )
 
+from users.models import Profile
+
 from django.views.generic import ListView
 
 
@@ -32,3 +34,15 @@ class CategoryList(ListView):
         else:
             query_set = Post.objects.all().order_by('-date_create')
         return query_set
+
+
+class UserPostList(ListView):
+    model = Post
+    template_name = 'blog/user_posts.html'
+    context_object_name = 'user_posts'
+
+    def get_queryset(self):
+        queryset = Post.objects.filter(
+            author=Profile.objects.get(
+                slug=self.kwargs['slug']).user).order_by('-date_create')
+        return queryset

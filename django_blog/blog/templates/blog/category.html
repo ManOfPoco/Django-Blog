@@ -1,40 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Blover{% endblock title %}
-
 {% block head %}
-
+<link rel="stylesheet" href="{% static 'poststyles.css' %}">
 {% endblock head %}
 
 {% block content %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-xs-8 col-md-0 featured-section">
-            <a class="featured" href="#"></a>
-        </div>
-        {% for category in categories %}
-        <div class="col-xs-4 col-md-2 py-3" style='text-align: center;'><a class='text-muted'
-                href="#">{{category.name}}</a>
-        </div>
-        {% endfor %}
-        <div class="col-xs-4 col-md-2 py-3" style='text-decoration: underline;'><a class='text-muted'
-                href="{% url 'blog:categories' %}">See all categories</a>
-        </div>
-    </div>
-    
-    {% for post in post_list %}
+{% for post in categories %}
+<div class="container py-2">
     <div class="row p-3 border rounded mb-4">
         <div class="row px-4 py-3">
             <div class="col-1" style='padding-right:0px; width:70px'>
-                <a href="#">
+                <a href="{% url 'users:profile' post.author.profile.slug %}">
                     <img src="{{ post.author.profile.image.url }}" alt="photo" width="50" height="50" class="rounded-circle">
                 </a>
             </div>
             <div class="col-md-7 col-9">
-                <a href="#" class='text-muted'>
-                    <h5>{{ post.author.username }}</h5>
+                <a href="{% url 'users:profile' post.author.profile.slug %}" class='text-muted'>
+                    <h5>{{ post.author.first_name }}{% if post.author.last_name %}{{ post.author.last_name }}{% endif %}</h5>
                 </a>
                 <p class='text-muted'>{{ post.last_updated|date:'F d, o' }}</p>
             </div>
@@ -44,11 +28,12 @@
                 <h3 class="mb-0 fw-bold text-dark">{{ post.title }}</h3>
                 <p class="card-text mb-auto">{{post.body|linebreaks|truncatewords:100}}</p>
                 {% if post.body|wordcount > 100 %}
-                    <span class="text-primary">Continue reading</span>
+                <span class="text-primary">Continue reading</span>
                 {% endif %}
             </a>
         </div>
     </div>
+</div>
 {% endfor %}
 
 {% endblock content %}

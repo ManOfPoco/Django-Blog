@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+<article class="blog-post">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-1" style='padding-right:0px; width:70px'>
+                <a href="#">
+                    <img src="{{ post_detail.author.profile.image.url }}" alt="photo" width="50" height="50" class="rounded-circle">
+                </a>
+            </div>
+            <div class="col-9" style='margin-top:15px'>
+                <a href="#" class='text-muted'>
+                    <h5>{{ post_detail.author.first_name }}{% if post_detail.author.last_name %}{{ post_detail.author.last_name }}{% endif %}</h5>
+                </a>
+                <p class='text-muted'>{{ post_detail.last_updated|date:'F d, o' }}</p>
+            </div>
+        </div>
+        <h2 class="blog-post-title mb-1">{{post_detail.title}}</h2>
+        {{post_detail.body|linebreaks}}
+    </div>
+</article>
+{% endblock content %}

@@ -68,4 +68,9 @@ class CreatePostView(LoginRequiredMixin, CreateView):
 class UpdatePostView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = CreatePostForm
-    template_name = 'blog/post_form.html'
+    template_name = 'blog/post_create_form.html'
+
+
+class DeletePostView(LoginRequiredMixin, DeleteView):
+    model = Post
+    success_url = '/'

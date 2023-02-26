@@ -17,9 +17,40 @@
                 </a>
                 <p class='text-muted'>{{ post_detail.last_updated|date:'F d, o' }}</p>
             </div>
+            <div class="col text-md-end">
+                {% if request.user == post_detail.author %}
+                <form method="POST" action="{% url 'blog:delete_post' post_detail.slug post_detail.id %}">{% csrf_token %}
+                    <a href="{% url 'blog:edit_post' post_detail.slug post_detail.id %}"><button type="button" class="btn btn-warning">
+                        Update
+                      </button></a>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Post-{{post_detail.id}}">
+                        Delete
+                      </button>
+                      <!-- Modal -->
+                      <div class="modal fade" id="Post-{{post_detail.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure you want to delete this post?</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              {{post_detail.title}}
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style='width:70px'>NO!</button>
+                              <button type="submit" class="btn btn-danger" style='width:70px'>Delete</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </form>
+                {% endif %}
+            </div>
         </div>
         <h2 class="blog-post-title mb-1">{{post_detail.title}}</h2>
         {{post_detail.body|linebreaks}}
+
     </div>
 </article>
 {% endblock content %}

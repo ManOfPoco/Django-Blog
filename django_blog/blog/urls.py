@@ -4,7 +4,9 @@ from .views import (
     post_detail,
     CategoryList,
     UserPostList,
-    CreatePostView
+    CreatePostView,
+    DeletePostView,
+    UpdatePostView
 )
 
 from django.views.generic import RedirectView
@@ -20,4 +22,7 @@ urlpatterns = [
     path('<slug:slug>/posts', UserPostList.as_view(), name='user_posts'),
 
     path('new-post/', CreatePostView.as_view(), name='new_post'),
+    path('delete-post/<slug:slug>/<int:pk>/',
+         DeletePostView.as_view(), name='delete_post'),
+    path('<slug:slug>/<int:pk>/edit/', UpdatePostView.as_view(), name='edit_post')
 ]

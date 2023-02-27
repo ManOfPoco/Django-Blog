@@ -100,3 +100,14 @@ class UpdatePostView(LoginRequiredMixin, UpdateView):
 class DeletePostView(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = '/'
+
+
+class DeleteCommentView(LoginRequiredMixin, DeleteView):
+    model = PostComment
+
+    def get_success_url(self) -> str:
+        comment = self.get_object()
+        return reverse('blog:blog_detail', kwargs={
+            'slug': comment.post.slug,
+            'pk': comment.post.id
+        })

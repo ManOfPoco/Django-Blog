@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
 
+{% block title %}{{post_detail.title}}{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'blog/post_detail.css' %}">
+{% endblock head %}
 
 
 {% block content %}
@@ -53,4 +59,27 @@
 
     </div>
 </article>
+
+<section class="comment-section">
+    <div class='btm'>
+        <h3>Comments ({{comments.count}})</h3>
+        <form method="POST" name='comment-form' class="comment-form">{% csrf_token %}
+            {{ comment_form }}
+            <button type="submit" name='post' value='{{post_detail.slug}}' class='btn btn-primary'>Post comment</button>
+        </form>
+        {% if not comments %}
+            <p>There are no comments yet. Be the first to comment!</p>
+        {% endif %}
+        {% for comment in comments %}
+        <div class="comment">
+            <a href="{% url 'users:profile' comment.author.profile.slug %}" class='text-muted'>
+                <img src="{{ comment.author.profile.image.url }}" class="avatar" alt="Author">
+                <p style='margin-bottom: 0px'>{{ comment.author|capfirst }}</p></a>
+            <p class="text-muted">{{ comment.date_create|date:"F d, Y" }}</p>
+            <p class="comment-text">{{ comment.comment }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
 {% endblock content %}

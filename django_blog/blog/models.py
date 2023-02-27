@@ -30,3 +30,15 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name}"
+
+
+class PostComment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE)
+    date_create = models.DateTimeField(default=timezone.now)
+    last_updated = models.DateTimeField(auto_now_add=True)
+    comment = models.TextField()
+
+    def __str__(self):
+        return f"Comment by {self.author.username} for {self.post.title}"

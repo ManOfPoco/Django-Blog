@@ -1,6 +1,6 @@
 from django.shortcuts import (
     get_list_or_404, get_object_or_404,
-    render
+    render, redirect
 )
 from django.urls import reverse
 
@@ -10,21 +10,47 @@ from django.views.generic import (
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Post, Category
+from .models import Post, Category, PostComment
 from users.models import Profile
 
-from .forms import CreatePostForm
+from .forms import CreatePostForm, PostCommentForm
 
 
 def post_detail(request, slug, pk):
 
-    post = get_object_or_404(Post, slug=slug)
+    if request.POST:
+        if request.user.is_authenticated:
 
-    context = {
-        'post_detail': post,
-    }
+            post = Post.objects.get(slug=slug, id=pk)
 
-    return render(request, 'blog/post_detail.html', context=context)
+            if 'comment' in request.POST:
+                comment_form = PostCommentForm(request.POST)
+
+                if comment_form.is_valid():
+
+                    comment_form.instance.author = request.user
+                    comment_form.instance.post = post
+
+                    comment_form.save()
+
+            return redirect(post.get_absolute_url())
+
+        else:
+            return redirect('/users/sign-in/')
+
+    else:
+
+        post = get_object_or_404(Post, slug=slug)
+        comments = PostComment.objects.filter(
+            post=post).order_by('-date_create')
+
+        context = {
+            'post_detail': post,
+            'comments': comments,
+            'comment_form': PostCommentForm(),
+        }
+
+        return render(request, 'blog/post_detail.html', context=context)
 
 
 class CategoryList(ListView):

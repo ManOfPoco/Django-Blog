@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, Category
+from .models import Post, Category, PostComment
 
 
 class CreatePostForm(forms.ModelForm):
@@ -26,3 +26,18 @@ class CreatePostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'body', 'category']
+
+
+class PostCommentForm(forms.ModelForm):
+
+    comment = forms.CharField(strip=False, widget=forms.Textarea(attrs={
+        'type': "text",
+        'class': 'form-control rounded border border-secondary',
+        'id': 'floatingInput',
+        'placeholder': 'Write your comment...',
+        'style': 'resize:none'
+    }))
+
+    class Meta:
+        model = PostComment
+        fields = ['comment']

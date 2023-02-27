@@ -81,7 +81,7 @@
                                     <a href="{% url 'users:profile' post.author.profile.slug %}" class='text-muted'>
                                         <div class='app_top'>
                                             <img src="{{ post.author.profile.image.url }}" alt="photo" width="50" height="50" style="float: left;">
-                                            <p><span style='font-weight: bold; padding: 5px 3% 5px;'>{{ post.author.first_name }}{% if post.author.last_name %}{{ post.author.last_name }}{% endif %}</span><br><span class='text-muted', style='padding: 5px 3% 5px;'>{{ post.date_create|date:'F d, o' }}</span></p></a>
+                                            <p><span style='font-weight: bold; padding: 5px 3% 5px;'>{{post.author.username}}</span><br><span class='text-muted', style='padding: 5px 3% 5px;'>{{ post.date_create|date:'F d, o' }}</span></p></a>
                                         </div>
                                         <a href="{% url 'blog:blog_detail' post.slug post.id %}" class='text-muted'><h3 class='mb-0 fw-bold text-dark'>{{ post.title|truncatewords:50 }}</h3>
                                         <p class="card-text mb-auto">{{post.body|linebreaks|truncatewords:30}}</p>

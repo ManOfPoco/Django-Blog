@@ -7,7 +7,7 @@
 
 {% block content %}
 
-{% for post in categories %}
+{% for post in page_obj %}
 <div class="container py-2">
     <div class="row p-3 border rounded mb-4">
         <div class="row px-4 py-3">
@@ -35,5 +35,25 @@
     </div>
 </div>
 {% endfor %}
+
+<div class="col p-4 d-flex flex-column position-static">
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        {% for i in paginator.page_range %}
+            {% if page_obj.number == i %}
+                <span class="current-page">{{ i }}</span>
+            {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %}
+                <a href="?page={{ i }}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock content %}

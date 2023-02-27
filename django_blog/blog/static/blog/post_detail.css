@@ -77,3 +77,46 @@
     border-radius: 50%;
     margin-right: 10px;
 }
+
+.comment .reply {
+    padding-left: 20px;
+}
+
+.reply {
+    padding-left: 40px;
+    margin-top: 10px;
+}
+
+.reply-form textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.reply-reply-form textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.comment-actions {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.comment-actions button {
+    margin-right: 10px;
+}
+
+.comment-actions button:last-child {
+    margin-right: 0;
+}
+
+.comment-actions button.btn-danger {
+    margin-left: auto;
+}

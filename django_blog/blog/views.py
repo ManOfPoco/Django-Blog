@@ -10,10 +10,10 @@ from django.views.generic import (
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Post, Category, PostComment
+from .models import Post, Category, PostComment, PostCommentReply
 from users.models import Profile
 
-from .forms import CreatePostForm, PostCommentForm
+from .forms import CreatePostForm, PostCommentForm, PostCommentReplyForm
 
 
 def post_detail(request, slug, pk):
@@ -33,6 +33,23 @@ def post_detail(request, slug, pk):
 
                     comment_form.save()
 
+            elif 'reply_comment' in request.POST:
+                reply_comment_form = PostCommentReplyForm(request.POST)
+
+                if reply_comment_form.is_valid():
+
+                    reply_comment_form.instance.post = post
+                    reply_comment_form.instance.comment = get_object_or_404(
+                        PostComment, id=request.POST.get('comment_id'))
+                    reply_comment_form.instance.author = request.user
+
+                    if 'parent_id' in request.POST:
+                        parent = PostCommentReply.objects.get(
+                            id=request.POST.get('parent_id'))
+
+                        reply_comment_form.instance.parent_reply = parent
+                    reply_comment_form.save()
+
             return redirect(post.get_absolute_url())
 
         else:
@@ -48,6 +65,7 @@ def post_detail(request, slug, pk):
             'post_detail': post,
             'comments': comments,
             'comment_form': PostCommentForm(),
+            'comment_reply_form': PostCommentReplyForm(),
         }
 
         return render(request, 'blog/post_detail.html', context=context)

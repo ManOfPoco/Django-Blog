@@ -60,6 +60,8 @@
     </div>
 </article>
 
+{% block comment %}
+
 <section class="comment-section">
     <div class='btm'>
         <h3>Comments ({{comments.count}})</h3>
@@ -100,9 +102,87 @@
                         </div>
                     </form>
                 {% endif %}
+                    {% if comment.replies.exists %}
+                        <button type="button" class="btn btn-primary btn-sm show-replies-button" data-comment-id="{{ comment.id }}">Show replies ({{comment.replies.all.count}})</button>
+                    {% endif %}
+                        <button type="button" class="btn btn-info btn-sm reply-button" data-comment-id="{{ comment.id }}">Reply comment</button>
+                    </div>
+                        <div class="replies" data-comment-id="{{ comment.id }}" style="display: none;">
+                            
+                            {% if comment.replies.exists %}
+                                <ul>
+                                    {% for reply in comment.replies.all %}
+                                        {% if not reply.parent_reply %}
+                                            <li>{{ reply.reply_comment }}</li>
+                                            <button type="button" class="btn btn-info btn-sm reply-reply-button" data-comment-id="{{ comment.id }}">Reply comment</button>
+                                                <form method="POST" class="reply-reply-form" data-comment-id="{{ comment.id }}" style="display: none;">{% csrf_token %}
+                                                    {{ comment_reply_form }}
+                                                        <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-primary">Post reply</button>
+                                                        <input type="hidden" name='post' value='{{post_detail.slug}}'>
+                                                        <input type='hidden' name='parent_id' value='{{reply.id}}'>
+                                                </form>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+
+                        </div>
+                <form method="POST" class="reply-form" data-comment-id="{{ comment.id }}" style="display: none;">{% csrf_token %}
+                    {{ comment_reply_form }}
+                    <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-primary">Post reply</button>
+                    <input type="hidden" name='post' value='{{post_detail.slug}}'>
+                </form>
         </div>
-    </div>
         {% endfor %}
+    </div>
 </section>
+
+<script>
+const replyButtons = document.querySelectorAll('.reply-button');
+const replyreplyButtons = document.querySelectorAll('.reply-reply-button');
+const showRepliesButtons = document.querySelectorAll('.show-replies-button');
+
+replyButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const commentId = button.dataset.commentId;
+        const replyForm = document.querySelector(`.reply-form[data-comment-id="${commentId}"]`);
+
+        if (replyForm.style.display === 'none') {
+            replyForm.style.display = 'block';
+        } else {
+            replyForm.style.display = 'none';
+        }
+    });
+});
+
+replyreplyButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const commentId = button.dataset.commentId;
+        const repliesDiv = document.querySelector(`.reply-reply-form[data-comment-id="${commentId}"]`);
+
+        if (repliesDiv.style.display === 'none') {
+            repliesDiv.style.display = 'block';
+        } else {
+            repliesDiv.style.display = 'none';
+        }
+    });
+});
+
+showRepliesButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const commentId = button.dataset.commentId;
+        const repliesDiv = document.querySelector(`.replies[data-comment-id="${commentId}"]`);
+
+        if (repliesDiv.style.display === 'none') {
+            repliesDiv.style.display = 'block';
+        } else {
+            repliesDiv.style.display = 'none';
+        }
+    });
+});
+</script>
+
+                
+  {% endblock comment %}
 
 {% endblock content %}

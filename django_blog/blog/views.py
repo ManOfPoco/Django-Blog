@@ -76,8 +76,10 @@ def post_detail(request, slug, pk):
             'comments': comments,
             'comment_form': PostCommentForm(),
             'comment_reply_form': PostCommentReplyForm(),
-            'is_liked': post.likes.filter(author=request.user).exists()
         }
+        if request.user.is_authenticated:
+            context['is_liked'] = post.likes.filter(
+                author=request.user).exists()
 
         return render(request, 'blog/post_detail.html', context=context)
 
@@ -118,8 +120,8 @@ class CategoryPostList(ListView):
     def get_queryset(self):
         if self.kwargs.get('slug'):
             query_set = Post.objects.filter(
-                    category=get_object_or_404(
-                        Category, slug=self.kwargs['slug']))
+                category=get_object_or_404(
+                    Category, slug=self.kwargs['slug']))
             return query_set
 
 

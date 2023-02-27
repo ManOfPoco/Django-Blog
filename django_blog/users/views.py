@@ -29,6 +29,14 @@ class SignUpView(CreateView):
 class ProfileView(TemplateView):
     template_name = 'users/profile.html'
 
+    def test_func(self):
+        return self.request.user.is_authenticated
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == 'POST' and not request.user.is_authenticated:
+            return redirect(reverse('users:sign-in'))
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 

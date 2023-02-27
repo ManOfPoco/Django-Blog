@@ -19,7 +19,7 @@
             </div>
             <div class="col-9" style='margin-top:15px'>
                 <a href="{% url 'users:profile' post_detail.author.profile.slug %}" class='text-muted'>
-                    <h5>{{ post_detail.author.first_name }}{% if post_detail.author.last_name %}{{ post_detail.author.last_name }}{% endif %}</h5>
+                    <h5>{{post_detail.author.username}}</h5>
                 </a>
                 <p class='text-muted'>{{ post_detail.last_updated|date:'F d, o' }}</p>
             </div>

@@ -67,7 +67,7 @@ def post_detail(request, slug, pk):
 
     else:
 
-        post = get_object_or_404(Post, slug=slug)
+        post = get_object_or_404(Post, slug=slug, id=pk)
         comments = PostComment.objects.filter(
             post=post).order_by('-date_create')
 

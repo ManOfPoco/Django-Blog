@@ -1,17 +1,19 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy, reverse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
 
 from django.core.paginator import Paginator
 
-from django.views.generic import CreateView, TemplateView
-
-from .forms import (
-    MyUserCreationForm,
-    ProfileUpdateForm, UserUpdateForm
-)
-
 from .models import Profile, Follow
 from blog.models import Post
+
+from django.views.generic import TemplateView, CreateView
+
+from .forms import (
+    ProfileUpdateForm, UserUpdateForm,
+    MyUserCreationForm,
+)
+
+from django.contrib.auth.decorators import login_required
 
 
 class SignUpView(CreateView):
@@ -27,9 +29,6 @@ class SignUpView(CreateView):
 class ProfileView(TemplateView):
     template_name = 'users/profile.html'
 
-    def test_func(self):
-        return self.request.user.is_authenticated
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -42,7 +41,29 @@ class ProfileView(TemplateView):
 
         return context
 
+    def post(self, request, *args, **kwargs):
+        follow_system(request, *args, **kwargs)
 
+        return redirect('users:profile', slug=kwargs['slug'])
+
+
+def follow_system(request, *args, **kwargs):
+
+    option = request.POST['option']
+    user_slug = request.POST['user']
+
+    user = get_object_or_404(Profile, slug=user_slug).user
+    if option == 'follow':
+        Follow.objects.create(
+            follower=request.user, following=user)
+    elif option == 'unfollow':
+        get_object_or_404(
+            Follow, follower=request.user, following=user).delete()
+
+    return redirect('users:profile', slug=kwargs['slug'])
+
+
+@login_required(login_url='/users/sign-in/')
 def profile_settings(request):
 
     if request.method == 'POST':
@@ -98,17 +119,7 @@ class FollowersFollowingView(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-
-        option = request.POST['option']
-        user_slug = request.POST['user']
-
-        user = get_object_or_404(Profile, slug=user_slug).user
-        if option == 'follow':
-            Follow.objects.create(
-                follower=request.user, following=user)
-        elif option == 'unfollow':
-            get_object_or_404(
-                Follow, follower=request.user, following=user).delete()
+        follow_system(request, *args, **kwargs)
 
         if request.path == reverse('users:followers_list', kwargs=kwargs):
             return redirect('users:followers_list', slug=kwargs['slug'])

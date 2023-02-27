@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load user_tags %}
 
 {% block title %}Followers{% endblock title %}
 
@@ -29,6 +29,18 @@
                                                         <div><a href="{% url 'users:profile' follower.follower.profile.slug %}" class="text-dark font-weight-600">{{follower.follower.username}}</a></div>
                                                         <div class="text-muted fs-13px">{% if follower.follower.profile.city %}{{follower.follower.profile.city}}{% endif %}</div>
                                                     </div>
+                                                    {% if user.is_authenticated %}
+                                                        {% check_followers request.user follower.follower as is_follower %}
+                                                        {% if request.user != follower.follower %}
+                                                            {% if is_follower %}
+                                                                <button type="submit" class="btn btn-danger" name='option' value='unfollow'>Unfollow</button>
+                                                                <input type='hidden' name='user' value={{follower.follower.profile.slug}}>
+                                                            {% else %}
+                                                                <button type="submit" class="btn btn-primary" name='option' value='follow'>Follow</button>
+                                                                <input type='hidden' name='user' value={{follower.follower.profile.slug}}>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endif %}
                                                 </div>
                                             </form>
                                         {% endfor %}

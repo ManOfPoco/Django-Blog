@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% load user_tags%}
 
 {% block title %}{{request.user.username}}{% endblock title %}
 
@@ -23,6 +23,20 @@
                                 <h5>{{ profile.user.username }}</h5>
                             </div>
 
+                            {% if request.user != profile.user and user.is_authenticated %}
+                            <form method='POST'>{% csrf_token %}
+                                <div class="px-1">
+                                    {% check_followers request.user profile.user as is_follower %}
+                                    {% if is_follower %}
+                                        <button type="submit" class="btn btn-danger" name='option' value='unfollow'>Unfollow</button>
+                                        <input type='hidden' name='user' value={{profile.slug}}>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-primary" name='option' value='follow'>Follow</button>
+                                        <input type='hidden' name='user' value={{profile.slug}}>
+                                    {% endif %}
+                                </div>
+                            </form>
+                            {% endif %}
                         </div>
                     </div>
 

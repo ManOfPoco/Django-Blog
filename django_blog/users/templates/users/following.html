@@ -1,5 +1,5 @@
 {% extends 'users/followers.html' %}
-
+{% load user_tags %}
 
 {% block title %}Following{% endblock title %}
 {{following_list}}
@@ -15,7 +15,18 @@
                         <div><a href="{% url 'users:profile' following.following.profile.slug %}" class="text-dark font-weight-600">{{following.following.username}}</a></div>
                         <div class="text-muted fs-13px">{% if following.following.profile.city %}{{following.following.profile.city}}{% endif %}</div>
                     </div>
-
+                        {% if user.is_authenticated %}
+                            {% check_following request.user following.following as is_following %}
+                            {% if request.user != following.following %}
+                                {% if is_following %}
+                                    <button type="submit" class="btn btn-danger" name='option' value='unfollow'>Unfollow</button>
+                                    <input type='hidden' name='user' value={{following.following.profile.slug}}>
+                                {% else %}
+                                    <button type="submit" class="btn btn-primary" name='option' value='follow'>Follow</button>
+                                    <input type='hidden' name='user' value={{following.following.profile.slug}}>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
                 </div>
             </form>
         {% endfor %}

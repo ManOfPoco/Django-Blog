@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Followers{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'users/followers.css' %}">
+{% endblock head %}
+
+{% block content %}
+
+<div class='content-body'>
+    <div class="profile-container">
+        <div class="profile-content">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="tab-content p-0">
+                        <div class="tab-pane fade active show" id="profile-followers">
+                            <div class="list-group">
+                                {% block follow %}
+                                    <h4>{{request.resolver_match.kwargs.slug|capfirst}} Followers</h4>
+                                    {% if page_obj %}
+                                        {% for follower in page_obj %}
+                                            <form method='POST'>{% csrf_token %}
+                                                <div class="list-group-item d-flex align-items-center">
+                                                    <img src="{{follower.follower.profile.image.url}}" alt="Avatar" width="60px" class="rounded-sm ml-n2" />
+                                                    <div class="flex-fill pl-3 pr-3">
+                                                        <div><a href="{% url 'users:profile' follower.follower.profile.slug %}" class="text-dark font-weight-600">{{follower.follower.username}}</a></div>
+                                                        <div class="text-muted fs-13px">{% if follower.follower.profile.city %}{{follower.follower.profile.city}}{% endif %}</div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        {% endfor %}
+                                            <div class="pagination">
+                                                {% if page_obj.has_previous %}
+                                                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                                                {% endif %}
+                                    
+                                                {% for i in paginator.page_range %}
+                                                    {% if forloop.counter < 5 %}
+                                                        {% if page_obj.number == i %}
+                                                            <span class="current-page">{{ i }}</span>
+                                                        {% else %}
+                                                            <a href="?page={{ i }}">{{ i }}</a>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                    
+                                                {% if page_obj.has_next %}
+                                                    <a href="?page={{ page_obj.next_page_number }}">next </a>
+                                                {% endif %}
+                                            </div>
+                                    {% else %}
+                                        <h4>No Following found</h4>
+                                    {% endif %}
+                                {% endblock follow %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+</div>
+
+
+
+{% endblock content %}

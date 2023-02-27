@@ -1,0 +1,130 @@
+.content-body {
+    background-color: #ebeef4;
+    margin-top: 20px;
+    width: 65%;
+    margin: auto;
+}
+
+.profile .profile-container {
+    padding: 30px 50px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+@media (max-width: 991.98px) {
+    .profile .profile-container {
+        padding: 20px 20px;
+    }
+
+    .content-body {
+        width: 100%;
+    }
+}
+
+.profile .profile-container .profile-content {
+    padding-left: 30px;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+
+@media (max-width: 991.98px) {
+    .profile .profile-container .profile-content {
+        padding-left: 0;
+    }
+}
+
+.profile .profile-img-list {
+    list-style-type: none;
+    margin: -0.0625rem -1.3125rem;
+    padding: 0;
+}
+
+.profile .profile-img-list:after,
+.profile .profile-img-list:before {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.profile .profile-img-list .profile-img-list-item {
+    float: left;
+    width: 25%;
+    padding: 0.0625rem;
+}
+
+.profile .profile-img-list .profile-img-list-item.main {
+    width: 50%;
+}
+
+.profile .profile-img-list .profile-img-list-item .profile-img-list-link {
+    display: block;
+    padding-top: 75%;
+    overflow: hidden;
+    position: relative;
+}
+
+.profile .profile-img-list .profile-img-list-item .profile-img-list-link .profile-img-content,
+.profile .profile-img-list .profile-img-list-item .profile-img-list-link img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.profile .profile-img-list .profile-img-list-item .profile-img-list-link .profile-img-content:before,
+.profile .profile-img-list .profile-img-list-item .profile-img-list-link img:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px solid rgba(60, 78, 113, 0.15);
+}
+
+.profile .profile-img-list .profile-img-list-item.with-number .profile-img-number {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    color: #fff;
+    font-size: 1.625rem;
+    font-weight: 500;
+    line-height: 1.625rem;
+    margin-top: -0.8125rem;
+    text-align: center;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a,
+.pagination .current-page {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    margin-right: 5px;
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.pagination a:hover {
+    background-color: #ddd;
+}
+
+.pagination .current-page {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}

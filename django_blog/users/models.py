@@ -13,6 +13,14 @@ class Profile(models.Model):
     slug = models.SlugField(max_length=150)
 
     @property
+    def followers_count(self):
+        return self.user.following.count()
+
+    @property
+    def following_count(self):
+        return self.user.follower.count()
+
+    @property
     def followers_list(self):
         return self.user.following.all().order_by('-follower')
 

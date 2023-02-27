@@ -1,0 +1,44 @@
+{% extends 'users/followers.html' %}
+
+
+{% block title %}Following{% endblock title %}
+{{following_list}}
+
+{% block follow %}
+    <h4>{{request.resolver_match.kwargs.slug|capfirst}} Following</h4>
+    {% if page_obj %}
+        {% for following in page_obj %}
+            <form method='POST'>{% csrf_token %}
+                <div class="list-group-item d-flex align-items-center">
+                    <img src="{{following.following.profile.image.url}}" alt="" width="60px" class="rounded-sm ml-n2" />
+                    <div class="flex-fill pl-3 pr-3">
+                        <div><a href="{% url 'users:profile' following.following.profile.slug %}" class="text-dark font-weight-600">{{following.following.username}}</a></div>
+                        <div class="text-muted fs-13px">{% if following.following.profile.city %}{{following.following.profile.city}}{% endif %}</div>
+                    </div>
+
+                </div>
+            </form>
+        {% endfor %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            {% for i in paginator.page_range %}
+                {% if forloop.counter < 5 %}
+                    {% if page_obj.number == i %}
+                        <span class="current-page">{{ i }}</span>
+                    {% else %}
+                        <a href="?page={{ i }}">{{ i }}</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next </a>
+            {% endif %}
+        </div>
+    {%else%}
+        <h4>No Following found</h4>
+    {% endif %}
+{% endblock follow %}

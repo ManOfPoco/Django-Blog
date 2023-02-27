@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
 {% block title %}{{post_detail.title}}{% endblock title %}
 
-{% block head %}
-<link rel="stylesheet" href="{% static 'blog/post_detail.css' %}">
-{% endblock head %}
-
-
 {% block content %}
+<link rel="stylesheet" href="{% static 'blog/post_detail.css' %}">
+
+
+<!-- Post section -->
 <article class="blog-post">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-1" style='padding-right:0px; width:70px'>
-                <a href="#">
+                <a href="{% url 'users:profile' post_detail.author.profile.slug %}">
                     <img src="{{ post_detail.author.profile.image.url }}" alt="photo" width="50" height="50" class="rounded-circle">
                 </a>
             </div>
             <div class="col-9" style='margin-top:15px'>
-                <a href="#" class='text-muted'>
+                <a href="{% url 'users:profile' post_detail.author.profile.slug %}" class='text-muted'>
                     <h5>{{ post_detail.author.first_name }}{% if post_detail.author.last_name %}{{ post_detail.author.last_name }}{% endif %}</h5>
                 </a>
                 <p class='text-muted'>{{ post_detail.last_updated|date:'F d, o' }}</p>
@@ -52,14 +52,41 @@
                       </div>
                 </form>
                 {% endif %}
+
+                <form method='POST'>{% csrf_token %}
+                    <button style="background-color: transparent; border: none;" name='like_post'>
+                        {% if user.is_authenticated %}
+                            {% if is_liked %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                </svg>
+                                <p>{{post_detail.likes.all.count}}</p>
+                                <input type='hidden' name='option' value='Unlike'>
+                            {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                                </svg>
+                                <p>{{post_detail.likes.all.count}}</p>
+                                <input type='hidden' name='option' value='Like'>
+                            {% endif %}
+                        {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                            </svg>
+                            <p>{{post_detail.likes.all.count}}</p>
+                        {% endif %}
+                    </button>
+                </form>
+                
             </div>
         </div>
         <h2 class="blog-post-title mb-1">{{post_detail.title}}</h2>
         {{post_detail.body|linebreaks}}
-
     </div>
 </article>
 
+
+<!-- Comment section -->
 {% block comment %}
 
 <section class="comment-section">

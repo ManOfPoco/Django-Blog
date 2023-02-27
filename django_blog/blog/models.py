@@ -63,3 +63,16 @@ class PostCommentReply(models.Model):
         for reply in all_replies:
             all_replies.extend(reply.get_all_replies())
         return all_replies
+
+
+class PostLike(models.Model):
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name='likes')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f'{self.post.title} liked by {self.author}'
+
+    class Meta:
+        unique_together = ('post', 'author')

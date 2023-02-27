@@ -10,7 +10,7 @@ from django.views.generic import (
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Post, Category, PostComment, PostCommentReply
+from .models import Post, Category, PostComment, PostCommentReply, PostLike
 from users.models import Profile
 
 from .forms import CreatePostForm, PostCommentForm, PostCommentReplyForm
@@ -50,6 +50,16 @@ def post_detail(request, slug, pk):
                         reply_comment_form.instance.parent_reply = parent
                     reply_comment_form.save()
 
+            elif 'like_post' in request.POST:
+
+                if request.POST.get('option') == 'Unlike':
+                    get_object_or_404(PostLike,
+                                      post=post, author=request.user).delete()
+
+                elif request.POST.get('option') == 'Like':
+                    PostLike.objects.create(
+                        post=post, author=request.user)
+
             return redirect(post.get_absolute_url())
 
         else:
@@ -57,7 +67,7 @@ def post_detail(request, slug, pk):
 
     else:
 
-        post = get_object_or_404(Post, slug=slug)
+        post = get_object_or_404(Post, slug=slug, id=pk)
         comments = PostComment.objects.filter(
             post=post).order_by('-date_create')
 
@@ -66,6 +76,7 @@ def post_detail(request, slug, pk):
             'comments': comments,
             'comment_form': PostCommentForm(),
             'comment_reply_form': PostCommentReplyForm(),
+            'is_liked': post.likes.filter(author=request.user).exists()
         }
 
         return render(request, 'blog/post_detail.html', context=context)

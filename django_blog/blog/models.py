@@ -24,6 +24,8 @@ class Post(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, blank=True)
+    image = models.ImageField(default='category_default.png',
+                              upload_to='category_pictures')
 
     def get_absolute_url(self):
         return reverse("category", kwargs={"slug": self.slug})

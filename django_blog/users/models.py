@@ -42,7 +42,17 @@ class Follow(models.Model):
         User, on_delete=models.CASCADE, related_name='following')
 
     class Meta:
-        unique_together = ('follower', 'following')
+        constraints = [
+            models.CheckConstraint(
+                name='user_cannot_follow_himself',
+                check=~models.Q(follower=models.F('following')),
+                violation_error_message="User can't follow himself"
+            ),
+            models.UniqueConstraint(
+                name='unique_follower_following',
+                fields=['follower', 'following']
+            )
+        ]
 
     def __str__(self):
         return f'{self.follower} follows {self.following}'

@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
 
+from mptt.models import MPTTModel, TreeForeignKey
+
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
@@ -34,37 +36,24 @@ class Category(models.Model):
         return f"{self.name}"
 
 
-class PostComment(models.Model):
+class PostComment(MPTTModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     author = models.ForeignKey(
         User, on_delete=models.CASCADE)
     date_create = models.DateTimeField(default=timezone.now)
     last_updated = models.DateTimeField(auto_now_add=True)
     comment = models.TextField()
+    parent = TreeForeignKey('self',
+                            on_delete=models.CASCADE,
+                            blank=True,
+                            null=True,
+                            related_name='children')
 
     def __str__(self):
         return f"Comment by {self.author.username} for {self.post.title}"
 
-
-class PostCommentReply(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    comment = models.ForeignKey(
-        PostComment, on_delete=models.CASCADE, related_name='replies')
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    date_create = models.DateTimeField(default=timezone.now)
-    last_updated = models.DateTimeField(auto_now_add=True)
-    reply_comment = models.TextField()
-    parent_reply = models.ForeignKey(
-        'self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
-
-    def __str__(self):
-        return f"Comment by {self.author.username} for {self.comment.comment}"
-
-    def get_all_replies(self):
-        all_replies = list(self.replies.all())
-        for reply in all_replies:
-            all_replies.extend(reply.get_all_replies())
-        return all_replies
+    class MPTTMeta:
+        order_insertion_by = ['comment']
 
 
 class PostLike(models.Model):

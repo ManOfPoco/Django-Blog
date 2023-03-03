@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load mptt_tags %}
 
 
 {% block title %}{{post_detail.title}}{% endblock title %}
@@ -91,7 +92,7 @@
 
 <section class="comment-section">
     <div class='btm'>
-        <h3>Comments ({{comments.count}})</h3>
+        <h3>{{comments.count}} Comment{% if comments.count >= 2 %}s{% endif %}</h3>
         <form method="POST" name='comment-form' class="comment-form">{% csrf_token %}
             {{ comment_form }}
             <button type="submit" name='post' value='{{post_detail.slug}}' class='btn btn-primary'>Post comment</button>
@@ -99,80 +100,75 @@
         {% if not comments %}
             <p>There are no comments yet. Be the first to comment!</p>
         {% endif %}
-        {% for comment in comments %}
-        <div class="comment">
-            <a href="{% url 'users:profile' comment.author.profile.slug %}" class='text-muted'>
-                <img src="{{ comment.author.profile.image.url }}" class="avatar" alt="Author">
-                <p style='margin-bottom: 0px'>{{ comment.author|capfirst }}</p></a>
-            <p class="text-muted">{{ comment.date_create|date:"F d, Y" }}</p>
-            <p class="comment-text">{{ comment.comment }}</p>
-            <div class="comment-actions">
-                {% if comment.author == request.user %}
-                    <form method="POST" action="{% url 'blog:delete_comment' post_detail.slug comment.id %}">{% csrf_token %}
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#CommentDelete-{{comment.id}}">Delete</button>
-                        <div class="modal fade" id="CommentDelete-{{comment.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure you want to delete this comment?</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    {{comment.comment}}
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-danger btn">Delete</button>
-                                </div>
+
+        {% recursetree comments %}
+            <div class="comment">
+                <a href="{% url 'users:profile' node.author.profile.slug %}" class='text-muted'>
+                    <img src="{{ node.author.profile.image.url }}" class="avatar" alt="Author">
+                    <p style='margin-bottom: 0px'>{{ node.author|capfirst }}</p></a>
+                <p class="text-muted">{{ node.date_create|date:"F d, Y" }}</p>
+                <p class="comment-text">{{ node.comment }}</p>
+                <div class="comment-actions">
+                    {% if node.author == request.user %}
+                        <form method="POST" action="{% url 'blog:delete_comment' post_detail.slug node.id %}">{% csrf_token %}
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#CommentDelete-{{node.id}}">Delete</button>
+                            <div class="modal fade" id="CommentDelete-{{node.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure you want to delete this comment?</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {{node.comment}}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-danger btn">Delete</button>
+                                    </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                {% endif %}
-                    {% if comment.replies.exists %}
-                        <button type="button" class="btn btn-primary btn-sm show-replies-button" data-comment-id="{{ comment.id }}">Show replies ({{comment.replies.all.count}})</button>
+                        </form>
                     {% endif %}
-                        <button type="button" class="btn btn-info btn-sm reply-button" data-comment-id="{{ comment.id }}">Reply comment</button>
-                    </div>
-                        <div class="replies" data-comment-id="{{ comment.id }}" style="display: none;">
-                            
-                            {% if comment.replies.exists %}
-                                <ul>
-                                    {% for reply in comment.replies.all %}
-                                        {% if not reply.parent_reply %}
-                                            <li>{{ reply.reply_comment }}</li>
-                                            <button type="button" class="btn btn-info btn-sm reply-reply-button" data-comment-id="{{ comment.id }}">Reply comment</button>
-                                                <form method="POST" class="reply-reply-form" data-comment-id="{{ comment.id }}" style="display: none;">{% csrf_token %}
-                                                    {{ comment_reply_form }}
-                                                        <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-primary">Post reply</button>
-                                                        <input type="hidden" name='post' value='{{post_detail.slug}}'>
-                                                        <input type='hidden' name='parent_id' value='{{reply.id}}'>
-                                                </form>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
 
-                        </div>
-                <form method="POST" class="reply-form" data-comment-id="{{ comment.id }}" style="display: none;">{% csrf_token %}
-                    {{ comment_reply_form }}
-                    <button type="submit" name="comment_id" value="{{ comment.id }}" class="btn btn-primary">Post reply</button>
-                    <input type="hidden" name='post' value='{{post_detail.slug}}'>
+                    {% if not node.is_leaf_node %}
+                        <button type="button" class="btn btn-primary btn-sm show-replies-button" data-node-id="{{ node.id }}">Show replies</button>
+                    {% endif %}
+                        <button type="button" class="btn btn-info btn-sm reply-button" data-node-id="{{ node.id }}">Reply</button>
+                </div>
+
+                <form method="POST" class="comment-form reply-form" data-node-id="{{ node.id }}" style="display: none;">{% csrf_token %}
+                    {{ comment_form }}
+                    <button type="submit" name="post" value="{{ post_detail.slug }}" class="btn btn-primary">Reply</button>
+                    <input type="hidden" name="parent" value="{{ node.id }}">
                 </form>
-        </div>
-        {% endfor %}
+
+                <div class="replies my-3" data-node-id="{{ node.id }}" style='display:none'>
+                    {% if not node.is_leaf_node %}
+                        {{ children }}
+                    {% endif %}
+                    <form method="POST" class="comment-form reply-comment-form" data-node-id="{{ node.id }}" style="display: none;">{% csrf_token %}
+                        {{ comment_form }}
+                        <button type="submit" name="post" value="{{ post_detail.slug }}" class="btn btn-primary">Reply</button>
+                        <input type="hidden" name="parent" value="{{ node.id }}">
+                    </form>
+                </div>
+            </div>
+        {% endrecursetree %}
     </div>
 </section>
 
 <script>
-const replyButtons = document.querySelectorAll('.reply-button');
-const replyreplyButtons = document.querySelectorAll('.reply-reply-button');
-const showRepliesButtons = document.querySelectorAll('.show-replies-button');
+const replyButton = document.querySelectorAll('.reply-button');
+const replyCommentButton = document.querySelectorAll('.reply-comment-buttom');
+const showrepliesButton = document.querySelectorAll('.show-replies-button');
 
-replyButtons.forEach(button => {
+replyButton.forEach(button => {
     button.addEventListener('click', () => {
-        const commentId = button.dataset.commentId;
-        const replyForm = document.querySelector(`.reply-form[data-comment-id="${commentId}"]`);
+        const nodeId = button.dataset.nodeId;
+        const replyForm = document.querySelector(`.reply-form[data-node-id="${nodeId}"]`);
+
 
         if (replyForm.style.display === 'none') {
             replyForm.style.display = 'block';
@@ -182,33 +178,33 @@ replyButtons.forEach(button => {
     });
 });
 
-replyreplyButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const commentId = button.dataset.commentId;
-        const repliesDiv = document.querySelector(`.reply-reply-form[data-comment-id="${commentId}"]`);
 
-        if (repliesDiv.style.display === 'none') {
-            repliesDiv.style.display = 'block';
+replyCommentButton.forEach(button => {
+    button.addEventListener('click', () => {
+        const nodeId = button.dataset.nodeId;
+        const replyCommentForm = document.querySelector(`.reply-comment-form[data-node-id="${nodeId}"]`);
+
+        if (replyCommentForm.style.display === 'none') {
+            replyCommentForm.style.display = 'block';
         } else {
-            repliesDiv.style.display = 'none';
+            replyCommentForm.style.display = 'none';
         }
     });
 });
 
-showRepliesButtons.forEach(button => {
+showrepliesButton.forEach(button => {
     button.addEventListener('click', () => {
-        const commentId = button.dataset.commentId;
-        const repliesDiv = document.querySelector(`.replies[data-comment-id="${commentId}"]`);
+        const nodeId = button.dataset.nodeId;
+        const replies = document.querySelector(`.replies[data-node-id="${nodeId}"]`);
 
-        if (repliesDiv.style.display === 'none') {
-            repliesDiv.style.display = 'block';
+        if (replies.style.display === 'none') {
+            replies.style.display = 'block';
         } else {
-            repliesDiv.style.display = 'none';
+            replies.style.display = 'none';
         }
     });
 });
 </script>
-
                 
   {% endblock comment %}
 

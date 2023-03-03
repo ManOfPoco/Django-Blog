@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Category, PostComment, PostCommentReply, PostLike
+from .models import Post, Category, PostComment, PostLike
 
 
 class Admin(admin.ModelAdmin):
@@ -9,4 +9,4 @@ class Admin(admin.ModelAdmin):
         return super().formfield_for_dbfield(db_field, request, **kwargs)
 
 
-admin.site.register((Post, Category, PostComment, PostCommentReply, PostLike))
+admin.site.register((Post, Category, PostComment, PostLike))

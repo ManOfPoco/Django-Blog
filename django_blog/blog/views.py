@@ -10,10 +10,10 @@ from django.views.generic import (
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Post, Category, PostComment, PostCommentReply, PostLike
+from .models import Post, Category, PostComment, PostLike
 from users.models import Profile
 
-from .forms import CreatePostForm, PostCommentForm, PostCommentReplyForm
+from .forms import CreatePostForm, PostCommentForm
 
 
 def post_detail(request, slug, pk):
@@ -31,24 +31,13 @@ def post_detail(request, slug, pk):
                     comment_form.instance.author = request.user
                     comment_form.instance.post = post
 
+                    if 'parent' in request.POST:
+                        parent = PostComment.objects.get(
+                            id=request.POST.get('parent'))
+
+                        comment_form.instance.parent = parent
+
                     comment_form.save()
-
-            elif 'reply_comment' in request.POST:
-                reply_comment_form = PostCommentReplyForm(request.POST)
-
-                if reply_comment_form.is_valid():
-
-                    reply_comment_form.instance.post = post
-                    reply_comment_form.instance.comment = get_object_or_404(
-                        PostComment, id=request.POST.get('comment_id'))
-                    reply_comment_form.instance.author = request.user
-
-                    if 'parent_id' in request.POST:
-                        parent = PostCommentReply.objects.get(
-                            id=request.POST.get('parent_id'))
-
-                        reply_comment_form.instance.parent_reply = parent
-                    reply_comment_form.save()
 
             elif 'like_post' in request.POST:
 
@@ -69,13 +58,12 @@ def post_detail(request, slug, pk):
 
         post = get_object_or_404(Post, slug=slug, id=pk)
         comments = PostComment.objects.filter(
-            post=post).order_by('-date_create')
+            post=post)
 
         context = {
             'post_detail': post,
             'comments': comments,
             'comment_form': PostCommentForm(),
-            'comment_reply_form': PostCommentReplyForm(),
         }
         if request.user.is_authenticated:
             context['is_liked'] = post.likes.filter(

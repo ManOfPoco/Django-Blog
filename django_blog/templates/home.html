@@ -10,6 +10,7 @@
 {% block content %}
 
 <div class="container">
+    {% block category %}
     <div class="row row-cols-xs-2 row-cols-sm-3 row-cols-md-3 text-center">
         {% for category in categories %}
         <div class="col py-3"><a class='text-muted'
@@ -20,6 +21,7 @@
                 href="{% url 'blog:categories' %}">See all categories</a>
         </div>
     </div>
+    {% endblock category %}
     {% for post in page_obj %}
     <div class="row p-3 border rounded mb-4">
         <div class="row px-4 py-3">
@@ -48,7 +50,7 @@
 {% endfor %}
 </div>
 
-
+{% block pagination %}
 <div class="col p-4 d-flex flex-column position-static">
     <div class="pagination">
         {% if page_obj.has_previous %}
@@ -67,5 +69,5 @@
             {% endif %}
     </div>
 </div>
-
+{% endblock pagination %}
 {% endblock content %}

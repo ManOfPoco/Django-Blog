@@ -32,8 +32,8 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left links -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search Blover" aria-label="Search">
+                    <form name='search' class="d-flex" role="search" action="{% url 'search:search' %}" method='GET' onsubmit="return validateSearchForm()">
+                        <input class="form-control me-2" type="search" placeholder="Search Blover" aria-label="Search" name='query'>
                     </form>
                 </ul>
                 <!-- Left links -->
@@ -98,6 +98,16 @@
 
 
     {% endblock content %}
+
+    <script>
+        function validateSearchForm() {
+            var query = document.forms["search"]["query"].value;
+            if (query.length == 0) {
+                return false;
+            }
+            return true;
+        }
+    </script>
 
 </body>
 

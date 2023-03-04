@@ -3,13 +3,11 @@ from django.shortcuts import render
 from blog.models import Post, Category
 from django.views.generic import ListView
 
-from django.db.models import Count
-
 
 class Home(ListView):
     model = Post
     template_name = 'home.html'
-    ordering = ['-date_create']
+    ordering = ['-last_updated', '-category']
     paginate_by = 10
     context_object_name = 'post_list'
 

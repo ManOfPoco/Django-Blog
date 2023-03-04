@@ -95,8 +95,9 @@ class UserPostList(ListView):
 
     def get_queryset(self):
         queryset = Post.objects.filter(
-            author=Profile.objects.get(
+            author=Profile.objects.select_related('user').get(
                 slug=self.kwargs['slug']).user).order_by('-date_create')
+
         return queryset
 
 
@@ -131,4 +132,4 @@ class CreatePostView(LoginRequiredMixin, CreateView):
 class UpdatePostView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = CreatePostForm
-    template_name = 'blog/post_form.html'
+    template_name = 'blog/post_create_form.html'

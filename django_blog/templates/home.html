@@ -10,16 +10,13 @@
 {% block content %}
 
 <div class="container">
-    <div class="row">
-        <div class="col-xs-8 col-md-0 featured-section">
-            <a class="featured" href="#"></a>
-        </div>
+    <div class="row row-cols-xs-2 row-cols-sm-3 row-cols-md-3 text-center">
         {% for category in categories %}
-        <div class="col-xs-4 col-md-2 py-3" style='text-align: center;'><a class='text-muted'
+        <div class="col py-3"><a class='text-muted'
                 href="{% url 'blog:category' category.slug %}">{{category.name}}</a>
         </div>
         {% endfor %}
-        <div class="col-xs-4 col-md-2 py-3" style='text-decoration: underline;'><a class='text-muted'
+        <div class="col py-3" style='text-decoration: underline;'><a class='text-muted'
                 href="{% url 'blog:categories' %}">See all categories</a>
         </div>
     </div>

@@ -34,6 +34,14 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <form name='search' class="d-flex" role="search" action="{% url 'search:search' %}" method='GET' onsubmit="return validateSearchForm()">
                         <input class="form-control me-2" type="search" placeholder="Search Blover" aria-label="Search" name='query'>
+                        <div class="input-group">
+                            <label class="input-group-text" for="search_for">Search for...</label>
+                            <select class="form-select" id="search_for" name='search_for'>
+                              <option value="post">Posts</option>
+                              <option value="people">People</option>
+                              <option value="category">Categories</option>
+                            </select>
+                          </div>
                     </form>
                 </ul>
                 <!-- Left links -->

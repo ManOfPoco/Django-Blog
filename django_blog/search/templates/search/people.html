@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}People{% endblock title %}
+
+{% block content %}
+
+<div class='container'>
+    <h3 class='fw-bold my-4 w-100'>Posts</h3>
+</div>
+<div class='container w-50'>
+    {% for person in page_obj %}
+        <div class='row text-left border rounded my-3' style='height: 70px'>
+            <a href="{% url 'users:profile' person.profile.slug %}" class='link-dark'>
+            <div class="col">
+                <img src="{{person.profile.image.url}}" width="50" height="50" class="rounded-circle" alt="Avatar">
+            </div>
+            <div class='col'>
+                <p>{{person.username}}</p>
+            </div>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

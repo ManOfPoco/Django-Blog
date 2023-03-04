@@ -5,7 +5,8 @@ from django.urls import reverse
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='profile')
     image = models.ImageField(default='default.png',
                               upload_to='profile_pictures')
     city = models.CharField(max_length=255, blank=True, null=True)

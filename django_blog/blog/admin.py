@@ -2,11 +2,22 @@ from django.contrib import admin
 from .models import Post, Category, PostComment, PostLike
 
 
-class Admin(admin.ModelAdmin):
-    def formfield_for_dbfield(self, db_field, request, **kwargs):
-        if db_field.name in ['body']:
-            kwargs['strip'] = False
-        return super().formfield_for_dbfield(db_field, request, **kwargs)
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    fields = ['title', 'slug', 'body', 'author', 'category']
+    prepopulated_fields = {'slug': ('title',)}
 
 
-admin.site.register((Post, Category, PostComment, PostLike))
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(PostComment)
+class PostCommentAdmin(admin.ModelAdmin):
+    fields = ['post', 'author', 'comment', 'parent']
+
+
+@admin.register(PostLike)
+class PostLikeAdmin(admin.ModelAdmin):
+    fields = ['post', 'author']

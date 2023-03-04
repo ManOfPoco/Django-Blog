@@ -34,6 +34,9 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name}"
+    
+    class Meta:
+        verbose_name_plural = 'Categories'
 
 
 class PostComment(MPTTModel):
@@ -55,6 +58,9 @@ class PostComment(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['comment']
 
+    class Meta:
+        verbose_name_plural = 'Post Comments'
+
 
 class PostLike(models.Model):
     post = models.ForeignKey(
@@ -67,3 +73,4 @@ class PostLike(models.Model):
 
     class Meta:
         unique_together = ('post', 'author')
+        verbose_name_plural = 'Post Likes'

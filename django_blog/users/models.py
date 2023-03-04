@@ -35,12 +35,18 @@ class Profile(models.Model):
     def __str__(self):
         return f'Profile {self.user.username} {self.user.last_name}'
 
+    class Meta:
+        verbose_name_plural = 'Profile'
+
 
 class Follow(models.Model):
     follower = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='follower')
     following = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='following')
+
+    def __str__(self):
+        return f'{self.follower} follows {self.following}'
 
     class Meta:
         constraints = [
@@ -54,6 +60,4 @@ class Follow(models.Model):
                 fields=['follower', 'following']
             )
         ]
-
-    def __str__(self):
-        return f'{self.follower} follows {self.following}'
+        verbose_name_plural = 'Follow'
